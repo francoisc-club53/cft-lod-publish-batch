@@ -1,0 +1,70 @@
+--- Import Error Log: 2026-03-04 00:02:45 ---
+
+[INFO] Log file path: E:\work\c53\test\cft-lod-publish-batch\scripts\import_errors.log
+[INFO] Found 2 items to process.
+[000] MAT: LOD material source: E:\work\c53\projects\bigtama_assets\trunk\models\bone\bigbone\textures\png
+[000] BASE: Importing bone/bigbone as usd
+[000] BASE: Renamed base to avoid LOD0 collision: bigbone_var0_LOD0 -> bigbone_var0_BASE
+[000] BASE: Cleared base shading networks
+[000] LOD0: Importing mesh E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-200/bone/bigbone/meshes/bigbone_var0_res200_noUVs.obj
+[000] LOD0: Renamed |Mesh -> bigbone_var0_LOD0
+[000] ATTR: Transferred custom attrs |import_grp_r6PYJBfQ|bigbone_var0_BASE -> |bigbone_var0_LOD0
+[000] MAT: Applied material to bigbone_var0_LOD0
+[000] PREP: Ran Prep from Selection flow on bigbone_var0_LOD0
+[000] LOD1: Importing mesh E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-100/bone/bigbone/meshes/bigbone_var0_res100_noUVs.obj
+[000] LOD1: Renamed |Mesh -> bigbone_var0_LOD1
+[000] MAT: Applied material to bigbone_var0_LOD1
+[000] LOD2: Importing mesh E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-50/bone/bigbone/meshes/bigbone_var0_res50_noUVs.obj
+[000] LOD2: Renamed |Mesh -> bigbone_var0_LOD2
+[000] MAT: Applied material to bigbone_var0_LOD2
+[000] BASE: Deleted base hierarchy: |import_grp_r6PYJBfQ|bigbone_var0_BASE, |import_grp_r6PYJBfQ
+[000] PUBLISH: Publish directory: E:/work/c53/projects/anvil\trunk\levels\rolling_mushroom\models\bone\publish\variants\bigbone\payload\versioned\v0010
+[000] PUBLISH: Published using placement mesh bigbone_var0_LOD0
+[000] RESULT: PASS bone/bigbone
+[000] PATH source: assets/resolution-hi/bone/bigbone/meshes/bigbone_var0_hires_hires.meta
+[000] PATH base_meta: E:\work\c53\test\cft-lod-balancer-batch\assets\resolution-hi\bone\bigbone\meshes\bigbone_var0_hires_hires.meta
+[000] PATH texture_dir: E:\work\c53\projects\bigtama_assets\trunk\models\bone\bigbone\textures\png
+[000] PATH publish_placement: bigbone_var0_LOD0
+[000] PATH publish_dir: E:/work/c53/projects/anvil\trunk\levels\rolling_mushroom\models\bone\publish\variants\bigbone\payload\versioned\v0010
+[000] PATH lod0_meta: E:/work/c53/test/cft-lod-balancer-batch\assets/resolution-200/bone/bigbone/meshes/bigbone_var0_res200_noUVs.meta
+[000] PATH lod1_meta: E:/work/c53/test/cft-lod-balancer-batch\assets/resolution-100/bone/bigbone/meshes/bigbone_var0_res100_noUVs.meta
+[000] PATH lod2_meta: E:/work/c53/test/cft-lod-balancer-batch\assets/resolution-50/bone/bigbone/meshes/bigbone_var0_res50_noUVs.meta
+[000] PATH lod0_mesh: E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-200/bone/bigbone/meshes/bigbone_var0_res200_noUVs.obj
+[000] PATH lod1_mesh: E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-100/bone/bigbone/meshes/bigbone_var0_res100_noUVs.obj
+[000] PATH lod2_mesh: E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-50/bone/bigbone/meshes/bigbone_var0_res50_noUVs.obj
+[000] ----------------------------------------------------------------------
+[000] DONE: Completed bone/bigbone (PASS)
+[001] MAT: LOD material source: E:\work\c53\projects\bigtama_assets\trunk\models\collectibles\carrot\textures\png
+[001] BASE: Importing collectable/carrot as usd
+[001] BASE: Renamed base to avoid LOD0 collision: carrot_var0_LOD0 -> carrot_var0_BASE
+[001] BASE: Cleared base shading networks
+[001] LOD0: Importing mesh E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-300/collectibles/carrot/meshes/carrot_var0_res300_noUVs.obj
+[001] LOD0: Renamed |Mesh -> carrot_var0_LOD0
+[001] ATTR: Transferred custom attrs |import_grp_5ivA8dFN|carrot_var0_BASE -> |carrot_var0_LOD0
+[001] MAT: Applied material to carrot_var0_LOD0
+[001] PREP: Ran Prep from Selection flow on carrot_var0_LOD0
+[001] LOD1: Importing mesh E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-200/collectibles/carrot/meshes/carrot_var0_res200_noUVs.obj
+[001] LOD1: Renamed |Mesh -> carrot_var0_LOD1
+[001] MAT: Applied material to carrot_var0_LOD1
+[001] LOD2: Importing mesh E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-100/collectibles/carrot/meshes/carrot_var0_res100_noUVs.obj
+[001] LOD2: Renamed |Mesh -> carrot_var0_LOD2
+[001] MAT: Applied material to carrot_var0_LOD2
+[001] BASE: Deleted base hierarchy: |import_grp_5ivA8dFN|carrot_var0_BASE, |import_grp_5ivA8dFN
+[001] PUBLISH: Publish directory: E:/work/c53/projects/anvil\trunk\levels\rolling_mushroom\models\collectable\publish\variants\carrot\payload\versioned\v0008
+[001] PUBLISH: Published using placement mesh carrot_var0_LOD0
+[001] RESULT: PASS collectable/carrot
+[001] PATH source: assets/resolution-hi/collectibles/carrot/meshes/carrot_var0_hires_hires.meta
+[001] PATH base_meta: E:\work\c53\test\cft-lod-balancer-batch\assets\resolution-hi\collectibles\carrot\meshes\carrot_var0_hires_hires.meta
+[001] PATH texture_dir: E:\work\c53\projects\bigtama_assets\trunk\models\collectibles\carrot\textures\png
+[001] PATH publish_placement: carrot_var0_LOD0
+[001] PATH publish_dir: E:/work/c53/projects/anvil\trunk\levels\rolling_mushroom\models\collectable\publish\variants\carrot\payload\versioned\v0008
+[001] PATH lod0_meta: E:/work/c53/test/cft-lod-balancer-batch\assets/resolution-300/collectibles/carrot/meshes/carrot_var0_res300_noUVs.meta
+[001] PATH lod1_meta: E:/work/c53/test/cft-lod-balancer-batch\assets/resolution-200/collectibles/carrot/meshes/carrot_var0_res200_noUVs.meta
+[001] PATH lod2_meta: E:/work/c53/test/cft-lod-balancer-batch\assets/resolution-100/collectibles/carrot/meshes/carrot_var0_res100_noUVs.meta
+[001] PATH lod0_mesh: E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-300/collectibles/carrot/meshes/carrot_var0_res300_noUVs.obj
+[001] PATH lod1_mesh: E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-200/collectibles/carrot/meshes/carrot_var0_res200_noUVs.obj
+[001] PATH lod2_mesh: E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-100/collectibles/carrot/meshes/carrot_var0_res100_noUVs.obj
+[001] ----------------------------------------------------------------------
+[001] DONE: Completed collectable/carrot (PASS)
+[SUMMARY] Passed: 2 | Failed: 0 | Total: 2
+[SUMMARY] Publish JSON: E:\work\c53\test\cft-lod-publish-batch\scripts\publish_report.json

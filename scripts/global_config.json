@@ -1,0 +1,7 @@
+{
+  "game": "anvil",
+  "level": "rolling_mushroom",
+  "asset_map_path": "E:/work/c53/test/cft-lod-balancer-batch/asset_lods_map_test.json",
+  "path_pattern": "resolution-[^\\\\/]+[\\\\/]+(?P<asset>[^\\\\/]+)[\\\\/]+(?P<variant>[^\\\\/]+)[\\\\/]+meshes",
+  "import_type": "usd"
+}
