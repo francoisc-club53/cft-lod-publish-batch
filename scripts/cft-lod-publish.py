@@ -29,7 +29,8 @@ publish_report_json_path = os.path.join(current_dir, 'publish_report.json')
 with open(log_file_path, 'w') as log_f:
     timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     log_f.write(f"--- Import Error Log: {timestamp} ---\n\n")
-    log_f.write(f"[INFO] Log file path: {os.path.abspath(log_file_path)}\n")
+    startup_log_path = os.path.normpath(os.path.abspath(log_file_path)).replace("\\", "/")
+    log_f.write(f"[INFO] Log file path: {startup_log_path}\n")
 
 def log_error(msg):
     with open(log_file_path, 'a') as log_f:
@@ -40,6 +41,12 @@ def log_line(msg):
     print(msg)
     with open(log_file_path, 'a') as log_f:
         log_f.write(msg + "\n")
+
+
+def norm_path(path_value):
+    if path_value is None:
+        return None
+    return os.path.normpath(str(path_value)).replace("\\", "/")
 
 
 def log_step(index, stage, msg):
@@ -58,19 +65,19 @@ def log_fail(index, stage, msg):
 
 def write_item_report(index, asset_tag, status, reasons, paths):
     log_line(f"[{index:03d}] RESULT: {status} {asset_tag}")
-    log_line(f"[{index:03d}] PATH source: {paths.get('source_path')}")
-    log_line(f"[{index:03d}] PATH base_meta: {paths.get('base_meta_path')}")
-    log_line(f"[{index:03d}] PATH texture_dir: {paths.get('tex_dir')}")
+    log_line(f"[{index:03d}] PATH source: {norm_path(paths.get('source_path'))}")
+    log_line(f"[{index:03d}] PATH base_meta: {norm_path(paths.get('base_meta_path'))}")
+    log_line(f"[{index:03d}] PATH texture_dir: {norm_path(paths.get('tex_dir'))}")
     log_line(f"[{index:03d}] PATH publish_placement: {paths.get('publish_placement')}")
-    log_line(f"[{index:03d}] PATH publish_dir: {paths.get('publish_dir')}")
+    log_line(f"[{index:03d}] PATH publish_dir: {norm_path(paths.get('publish_dir'))}")
 
     lod_meta_paths = paths.get("lod_meta_paths", {})
     for lod_key in ["lod0", "lod1", "lod2"]:
-        log_line(f"[{index:03d}] PATH {lod_key}_meta: {lod_meta_paths.get(lod_key)}")
+        log_line(f"[{index:03d}] PATH {lod_key}_meta: {norm_path(lod_meta_paths.get(lod_key))}")
 
     lod_mesh_paths = paths.get("lod_mesh_paths", {})
     for lod_key in ["lod0", "lod1", "lod2"]:
-        log_line(f"[{index:03d}] PATH {lod_key}_mesh: {lod_mesh_paths.get(lod_key)}")
+        log_line(f"[{index:03d}] PATH {lod_key}_mesh: {norm_path(lod_mesh_paths.get(lod_key))}")
 
     if reasons:
         for reason in reasons:
@@ -166,16 +173,21 @@ def get_texture_folder_from_base_meta(data_item, map_base_dir):
     return None
 
 
-def run_prep_from_selection_on_node(node_name):
+def run_prep_from_selection_on_node(node_name, asset_name=None, variant_name=None):
     if not node_name or not cmds.objExists(node_name):
         return False
 
-    cmds.select(node_name, replace=True)
-    custom_attrs = pub_util.get_custom_attrs_from_node(node_name)
+    short_name = node_name.split("|")[-1]
+    cmds.select(short_name, replace=True)
+    custom_attrs = pub_util.get_custom_attrs_from_node(short_name)
     if custom_attrs is None:
-        pub_util.add_default_asset_attrs(node_name)
+        pub_util.add_default_asset_attrs(short_name)
 
-    cmds.setAttr(f"{node_name}.defaultVariant", node_name, type="string")
+    if asset_name:
+        cmds.setAttr(f"{short_name}.assetType", asset_name, type="string")
+    if variant_name:
+        cmds.setAttr(f"{short_name}.variant", variant_name, type="string")
+    cmds.setAttr(f"{short_name}.defaultVariant", short_name, type="string")
     return True
 
 
@@ -232,7 +244,7 @@ for index, item in enumerate(items):
         base_meta_rel = data.get("hires") or data.get("source_mesh")
     if base_meta_rel:
         base_meta_path = base_meta_rel if os.path.isabs(base_meta_rel) else os.path.join(asset_map_dir, base_meta_rel)
-        report_paths["base_meta_path"] = os.path.normpath(base_meta_path)
+        report_paths["base_meta_path"] = norm_path(base_meta_path)
 
     if not isinstance(source_path, str) or not source_path:
         reason = f"Skipping item: could not extract path. Item={data}"
@@ -241,7 +253,7 @@ for index, item in enumerate(items):
         write_item_report(index, "UNKNOWN", "FAIL", item_reasons, report_paths)
         run_report.append({"index": index, "asset_tag": "UNKNOWN", "status": "FAIL", "reasons": item_reasons, "paths": report_paths})
         continue
-    report_paths["source_path"] = source_path
+    report_paths["source_path"] = norm_path(source_path)
 
     # Use Regex to get asset/variant from the path itself
     match = path_pattern.search(source_path)
@@ -255,17 +267,14 @@ for index, item in enumerate(items):
 
     asset = match.group("asset")
     variant = match.group("variant")
-    # Fix spelling mismatch between source paths and disk folders (example: "collectibles" -> "collectable")
-    if asset == "collectibles": # This is a specific fix based on observed data
-        asset = "collectable"
     asset_tag = f"{asset}/{variant}"
 
     # Only import the base asset if it was actually in the JSON as hires/source_mesh or if the item itself was a string path
     has_base_import = (isinstance(data, dict) and ("hires" in data or "source_mesh" in data)) or isinstance(data, str)
     tex_dir = get_texture_folder_from_base_meta(data, asset_map_dir)
-    report_paths["tex_dir"] = tex_dir
+    report_paths["tex_dir"] = norm_path(tex_dir)
     if tex_dir:
-        log_step(index, "MAT", f"LOD material source: {tex_dir}")
+        log_step(index, "MAT", f"LOD material source: {norm_path(tex_dir)}")
     else:
         reason = "No texture folder found from base meta; LODs will keep default materials"
         log_warn(index, "MAT", reason)
@@ -337,10 +346,10 @@ for index, item in enumerate(items):
                     with open(lod_meta_abs_path, 'r') as f:
                         lod_meta_data = json.load(f)
                         lod_mesh_path = lod_meta_data.get("output_mesh") or lod_meta_data.get("source_mesh")
-                        report_paths["lod_mesh_paths"][lod_key] = lod_mesh_path
+                        report_paths["lod_mesh_paths"][lod_key] = norm_path(lod_mesh_path)
                         
                         if lod_mesh_path and os.path.exists(lod_mesh_path):
-                            log_step(index, lod_key.upper(), f"Importing mesh {lod_mesh_path}")
+                            log_step(index, lod_key.upper(), f"Importing mesh {norm_path(lod_mesh_path)}")
                             imported_nodes = cmds.file(lod_mesh_path, i=True, type="OBJ", options="mo=1", pr=True, returnNewNodes=True)
                             
                             # Rename imported LOD mesh
@@ -366,7 +375,7 @@ for index, item in enumerate(items):
                                     log_step(index, "MAT", f"Applied material to {lod_name}")
 
                                 if i == 0:
-                                    if run_prep_from_selection_on_node(lod_long_name):
+                                    if run_prep_from_selection_on_node(lod_long_name, asset_name=asset, variant_name=variant):
                                         log_step(index, "PREP", f"Ran Prep from Selection flow on {lod_name}")
                                     else:
                                         log_warn(index, "PREP", f"Could not run Prep from Selection flow on {lod_name}")
@@ -383,16 +392,16 @@ for index, item in enumerate(items):
                                 log_warn(index, lod_key.upper(), "No nodes returned from import")
                                 item_reasons.append(reason)
                         else:
-                            reason = f"{lod_key}: mesh path missing/invalid: {lod_mesh_path}"
-                            log_warn(index, lod_key.upper(), f"Mesh path missing/invalid: {lod_mesh_path}")
+                            reason = f"{lod_key}: mesh path missing/invalid: {norm_path(lod_mesh_path)}"
+                            log_warn(index, lod_key.upper(), f"Mesh path missing/invalid: {norm_path(lod_mesh_path)}")
                             item_reasons.append(reason)
                 except Exception as e:
-                    reason = f"{lod_key}: failed reading meta {lod_meta_abs_path}: {e}"
-                    log_fail(index, lod_key.upper(), f"Failed reading meta {lod_meta_abs_path}: {e}")
+                    reason = f"{lod_key}: failed reading meta {norm_path(lod_meta_abs_path)}: {e}"
+                    log_fail(index, lod_key.upper(), f"Failed reading meta {norm_path(lod_meta_abs_path)}: {e}")
                     item_reasons.append(reason)
             else:
-                reason = f"{lod_key}: meta file missing/invalid: {lod_meta_abs_path}"
-                log_warn(index, lod_key.upper(), f"Meta file missing/invalid: {lod_meta_abs_path}")
+                reason = f"{lod_key}: meta file missing/invalid: {norm_path(lod_meta_abs_path)}"
+                log_warn(index, lod_key.upper(), f"Meta file missing/invalid: {norm_path(lod_meta_abs_path)}")
                 item_reasons.append(reason)
 
     if base_delete_target and cmds.objExists(base_delete_target):
@@ -414,8 +423,8 @@ for index, item in enumerate(items):
                 data_types=["fbx", "usd"],
                 collision_type="auto"
             )
-            report_paths["publish_dir"] = publish_dir
-            log_step(index, "PUBLISH", f"Publish directory: {publish_dir}")
+            report_paths["publish_dir"] = norm_path(publish_dir)
+            log_step(index, "PUBLISH", f"Publish directory: {norm_path(publish_dir)}")
             log_step(index, "PUBLISH", f"Published using placement mesh {lod0_publish_name}")
             publish_succeeded = True
         except Exception as e:
@@ -442,7 +451,7 @@ for r in failed:
 
 publish_json = {
     "generated_at": datetime.datetime.now().isoformat(),
-    "log_file": os.path.abspath(log_file_path),
+    "log_file": norm_path(os.path.abspath(log_file_path)),
     "items": [],
 }
 
@@ -459,4 +468,4 @@ for r in run_report:
 with open(publish_report_json_path, "w") as f:
     json.dump(publish_json, f, indent=2)
 
-log_line(f"[SUMMARY] Publish JSON: {os.path.abspath(publish_report_json_path)}")
+log_line(f"[SUMMARY] Publish JSON: {norm_path(os.path.abspath(publish_report_json_path))}")
