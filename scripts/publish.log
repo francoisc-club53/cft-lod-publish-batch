@@ -1,0 +1,39 @@
+--- Import Error Log: 2026-03-04 22:12:15 ---
+
+[INFO] Log file path: E:/work/c53/test/cft-lod-publish-batch/scripts/publish.log
+[INFO] Found 1 items to process.
+[000] MAT: LOD material source: E:/work/c53/projects/bigtama_assets/trunk/models/bone/bigbone/textures/png
+[000] BASE: Importing bone/bigbone as usd
+[000] ERROR BASE: Failed processing bone/bigbone: All import attempts failed -> usd: join() argument must be str, bytes, or os.PathLike object, not 'NoneType' | fbx: join() argument must be str, bytes, or os.PathLike object, not 'NoneType'
+[000] LOD0: Importing mesh E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-200/bone/bigbone/meshes/bigbone_var0_res200_noUVs.obj
+[000] LOD0: Renamed |Mesh -> bone_bigbone_LOD0
+[000] MAT: Applied material to bone_bigbone_LOD0
+[000] PREP: Ran Prep from Selection flow on bone_bigbone_LOD0
+[000] LOD1: Importing mesh E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-100/bone/bigbone/meshes/bigbone_var0_res100_noUVs.obj
+[000] LOD1: Renamed |Mesh -> bone_bigbone_LOD1
+[000] MAT: Applied material to bone_bigbone_LOD1
+[000] LOD2: Importing mesh E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-50/bone/bigbone/meshes/bigbone_var0_res50_noUVs.obj
+[000] LOD2: Renamed |Mesh -> bone_bigbone_LOD2
+[000] MAT: Applied material to bone_bigbone_LOD2
+[000] ERROR PUBLISH: Failed publishing bone/bigbone: join() argument must be str, bytes, or os.PathLike object, not 'NoneType'
+[000] RESULT: FAIL bone/bigbone
+[000] PATH source: {assets_root}/models/bone/bigbone/meshes/hires/bigbone_var0_paint.obj
+[000] PATH base_meta: E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-hi/bone/bigbone/meshes/bigbone_var0_hires.meta
+[000] PATH texture_dir: E:/work/c53/projects/bigtama_assets/trunk/models/bone/bigbone/textures/png
+[000] PATH publish_placement: bone_bigbone_LOD0
+[000] PATH publish_dir: None
+[000] PATH lod0_meta: E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-200/bone/bigbone/meshes/bigbone_var0_res200_noUVs.meta
+[000] PATH lod1_meta: E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-100/bone/bigbone/meshes/bigbone_var0_res100_noUVs.meta
+[000] PATH lod2_meta: E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-50/bone/bigbone/meshes/bigbone_var0_res50_noUVs.meta
+[000] PATH lod0_mesh: E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-200/bone/bigbone/meshes/bigbone_var0_res200_noUVs.obj
+[000] PATH lod1_mesh: E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-100/bone/bigbone/meshes/bigbone_var0_res100_noUVs.obj
+[000] PATH lod2_mesh: E:/work/c53/test/cft-lod-balancer-batch/assets/resolution-50/bone/bigbone/meshes/bigbone_var0_res50_noUVs.obj
+[000] WHY: Failed processing bone/bigbone: All import attempts failed -> usd: join() argument must be str, bytes, or os.PathLike object, not 'NoneType' | fbx: join() argument must be str, bytes, or os.PathLike object, not 'NoneType'
+[000] WHY: publish failed for bone/bigbone: join() argument must be str, bytes, or os.PathLike object, not 'NoneType'
+[000] ----------------------------------------------------------------------
+[000] DONE: Completed bone/bigbone (FAIL)
+[SUMMARY] Passed: 0 | Failed: 1 | Total: 1
+[SUMMARY] FAIL [000] bone/bigbone
+[SUMMARY] WHY: Failed processing bone/bigbone: All import attempts failed -> usd: join() argument must be str, bytes, or os.PathLike object, not 'NoneType' | fbx: join() argument must be str, bytes, or os.PathLike object, not 'NoneType'
+[SUMMARY] WHY: publish failed for bone/bigbone: join() argument must be str, bytes, or os.PathLike object, not 'NoneType'
+[SUMMARY] Publish JSON: E:/work/c53/test/cft-lod-publish-batch/scripts/publish_report.json

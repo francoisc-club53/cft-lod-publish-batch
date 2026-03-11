@@ -1,0 +1,87 @@
+--- Import Error Log: 2026-03-04 21:46:59 ---
+
+[0] ERROR processing bone/bigbone: Unrecognized file.
+
+[2] ERROR processing collectable/carrot: Unrecognized file.
+
+[3] ERROR processing collectable/steak: Unrecognized file.
+
+[4] ERROR processing elements/flow_a: Unrecognized file.
+
+[5] ERROR processing elements/puddle_a: Unrecognized file.
+
+[6] ERROR processing groundplane/groundplane_a: [WinError 3] The system cannot find the path specified: 'E:/work/c53/projects/anvil\\trunk\\levels\\rolling_mushroom\\models\\groundplane\\publish\\variants'
+[7] ERROR processing mushroom/mushroom_a: Unrecognized file.
+
+[8] ERROR processing mushroom/mushroom_b: Unrecognized file.
+
+[9] ERROR processing nerfGun/nerfGun_a: Unrecognized file.
+
+[11] ERROR processing plants/rootplant_a: Unrecognized file.
+
+[13] ERROR processing rock/rock_a: Unrecognized file.
+
+[14] ERROR processing rock/rock_b: Unrecognized file.
+
+[16] ERROR processing root/root_d: Unrecognized file.
+
+[17] ERROR processing root/root_e: Unrecognized file.
+
+[19] ERROR processing root/root_g: Unrecognized file.
+
+[20] ERROR processing root/root_h: Unrecognized file.
+
+[23] ERROR processing root/root_k: Unrecognized file.
+
+[24] ERROR processing root/root_l: Unrecognized file.
+
+[28] ERROR processing bone/bigskull: Unrecognized file.
+
+[29] ERROR processing cliff/cliff_l: Unrecognized file.
+
+[30] ERROR processing cliff/cliff_m: Unrecognized file.
+
+[31] ERROR processing cliff/cliff_n: Unrecognized file.
+
+[34] ERROR processing structures/temple_a: Unrecognized file.
+
+[35] ERROR processing structures/totem_a: Unrecognized file.
+
+[36] ERROR processing structures/waypoint_a: Unrecognized file.
+
+[37] ERROR processing vehicle_tools/bellows: [WinError 3] The system cannot find the path specified: 'E:/work/c53/projects/anvil\\trunk\\levels\\rolling_mushroom\\models\\vehicle_tools\\publish\\variants'
+[39] ERROR processing vehicles/balloonfish: [WinError 3] The system cannot find the path specified: 'E:/work/c53/projects/anvil\\trunk\\levels\\rolling_mushroom\\models\\vehicles\\publish\\variants'
+[40] ERROR processing vehicles/bongoboar: [WinError 3] The system cannot find the path specified: 'E:/work/c53/projects/anvil\\trunk\\levels\\rolling_mushroom\\models\\vehicles\\publish\\variants'
+[41] ERROR processing vehicles/coalkart: [WinError 3] The system cannot find the path specified: 'E:/work/c53/projects/anvil\\trunk\\levels\\rolling_mushroom\\models\\vehicles\\publish\\variants'
+[42] ERROR processing vehicles/pufferfish: [WinError 3] The system cannot find the path specified: 'E:/work/c53/projects/anvil\\trunk\\levels\\rolling_mushroom\\models\\vehicles\\publish\\variants'
+[43] ERROR processing bone/bigrib: Unrecognized file.
+
+[44] ERROR processing elements/wall_a: Unrecognized file.
+
+[45] ERROR processing mushroom/mushroom_c: Unrecognized file.
+
+[46] ERROR processing mushroom/mushroom_d: Unrecognized file.
+
+[47] ERROR processing plants/rootplant_c: Unrecognized file.
+
+[48] ERROR processing vehicle_tools/drumstick: [WinError 3] The system cannot find the path specified: 'E:/work/c53/projects/anvil\\trunk\\levels\\rolling_mushroom\\models\\vehicle_tools\\publish\\variants'
+[49] ERROR processing plants/alienplant_b: Unrecognized file.
+
+[50] ERROR processing plants/spikyroot_a: Unrecognized file.
+
+[51] ERROR processing plants/spikyroot_b: Unrecognized file.
+
+[52] ERROR processing player/player_a: [WinError 3] The system cannot find the path specified: 'E:/work/c53/projects/anvil\\trunk\\levels\\rolling_mushroom\\models\\player\\publish\\variants'
+[53] ERROR processing rock/rock_c: Unrecognized file.
+
+[54] ERROR processing lamp/alienlamp_a: Unrecognized file.
+
+[55] ERROR processing lamp/alienlamp_b: Unrecognized file.
+
+[57] ERROR processing plants/alienbush_a: Unrecognized file.
+
+[58] ERROR processing plants/alienbush_b: Unrecognized file.
+
+[60] ERROR processing structures/arenawall_a: Unrecognized file.
+
+[61] ERROR processing vehicle_tools/paddle: [WinError 3] The system cannot find the path specified: 'E:/work/c53/projects/anvil\\trunk\\levels\\rolling_mushroom\\models\\vehicle_tools\\publish\\variants'

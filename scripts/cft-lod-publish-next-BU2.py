@@ -7,15 +7,19 @@ TODO goals:
 3) Fail safely per asset, continue batch.
 """
 
+import datetime
 import json
 import os
 import re
+from os import rename
 
 import maya.cmds as cmds
 from cft_sandbox import import_utils
 from cft_sandbox import publish_utils as pub_util
 from cft_sandbox import texture_utils
 
+# Constants/config
+LOD_KEYS = ["lod0", "lod1", "lod2"]
 REQUIRED_CONFIG_FIELDS = ["game", "level", "asset_map_path"]
 
 
@@ -29,6 +33,8 @@ def get_current_dir():
 
 CURRENT_DIR = get_current_dir()
 CONFIG_PATH = os.path.join(CURRENT_DIR, "global_config.json")
+LOG_PATH = os.path.join(CURRENT_DIR, "publish.log")
+REPORT_PATH = os.path.join(CURRENT_DIR, "publish_report.json")
 
 
 def load_json(path):
@@ -50,6 +56,15 @@ def validate_config(config):
         raise ValueError(f"asset_map_path does not exist: {asset_map_path}")
 
     return True
+
+# TODO: logging/reporting
+# - init publish.log
+# - unified log helpers: info/warn/error with item index
+# - in-memory run report model
+# - write publish_report.json at end
+
+
+
 
 def iter_asset_map_items(asset_map):
     """
@@ -127,16 +142,63 @@ def choose_best_shader_key(mesh_name, shader_map):
     return keys[0] if keys else None
 
 
-def unlock_and_soften_normals(mesh_nodes):
-    for mesh in mesh_nodes or []:
-        try:
-            cmds.select(mesh, replace=True)
-            cmds.polyNormalPerVertex(ufn=True)
-            cmds.polySoftEdge(a=180, ch=False)
-            cmds.delete(mesh, constructionHistory=True)
-            print(f"    - normals fixed: {mesh}")
-        except Exception as e:
-            print(f"  - warn: failed normal fix on {mesh}: {e}")
+def assign_best_shader_from_folder(mesh_name, folder_path):
+    """
+    Build shader map from folder, then assign the best matching shader to mesh.
+    """
+    shader_map = texture_utils.construct_shaders_from_folder(folder_path, apply_to_selected=False)
+    best_key = choose_best_shader_key(mesh_name, shader_map)
+    if not best_key:
+        print(f"  - warn: no shader candidates found for {mesh_name}")
+        return False
+
+    shader_name = shader_map.get(best_key)
+    if not shader_name or not cmds.objExists(shader_name):
+        print(f"  - warn: shader missing for key {best_key}")
+        return False
+
+    shading_groups = cmds.listConnections(f"{shader_name}.outColor", type="shadingEngine") or []
+    if not shading_groups:
+        print(f"  - warn: no shading group for shader {shader_name}")
+        return False
+
+    cmds.sets(mesh_name, edit=True, forceElement=shading_groups[0])
+    print(f"    - shader assigned: {mesh_name} -> {shader_name}")
+    return True
+
+# TODO: path/meta helpers
+# - normalize path helper
+# - resolve relative vs absolute paths
+# - read primary .meta from asset-map item
+# - extract asset/variant from meta file (source_mesh/output_mesh/texture_path)
+# - define strict fallback policy (if any)
+
+# TODO: maya scene helpers
+# - open new scene per item
+# - import base asset with usd->fbx fallback
+# - ensure mayaUsdPlugin loaded when needed
+# - cleanup transforms (soft edges, delete history, freeze)
+# - remove base shading nodes before LOD material build
+# - delete base node + empty parents after LOD import
+
+# TODO: LOD import flow
+# - load lod0/lod1/lod2 meta files
+# - resolve and import OBJ meshes
+# - rename to <prefix>_LOD0..2
+# - transfer custom attrs from base to LOD0
+# - run prep-from-selection on LOD0
+# - apply materials from texture folder if present
+
+# TODO: publish flow
+# - select imported LOD nodes
+# - publish with pub_util.publish_asset(...)
+# - capture publish placement + publish directory
+# - handle publish failures without stopping batch
+
+# TODO: orchestration
+# - process_item(item_index, item_data) -> item result
+# - main() loops all items and writes summary
+# - __main__ entrypoint
 
 
 def main():
@@ -155,6 +217,7 @@ def main():
     for item_name, item_data in iter_asset_map_items(asset_map):
         # Isolate each asset to avoid stale materials/shading networks from prior items.
         cmds.file(new=True, force=True)
+        # TODO: implement per-item processing here.
         print(f"[ITEM] {item_name}")
         if isinstance(item_data, dict):
             asset = item_data.get("asset")
@@ -167,14 +230,14 @@ def main():
             base_name = import_utils.do_general_import(game, level, asset, variant, "usd", versioned_dir=None)
             base_name = cmds.ls(base_name[0], shortNames=True)[0] if isinstance(base_name, (list, tuple)) and base_name else base_name
             base_name_new = cmds.rename(base_name, f"{base_name}_base")
-            lod0_name = None
+            lod0_name =  None
             lod0_texture_path = None
             lod_publish_list = []
             
             print(f"  - base: {base_name_new}")
             if not base_name:
                 raise RuntimeError(f"do_general_import returned {base_name!r}")
-            # Process LODs.
+            #process lods
             for field_name, field_value in item_data.items():
                 if field_name not in allowed_lod_keys:
                     continue
@@ -188,7 +251,7 @@ def main():
                         
                         if isinstance(meta_data, dict):
                             
-                            # Import LOD.
+                            #import lods
                             look_variant = meta_data.get("look_variant")
                             imported_nodes = cmds.file(
                                 meta_data["output_mesh"],
@@ -199,7 +262,7 @@ def main():
                                 returnNewNodes=True,
                             )
                             
-                            # Filter import to transform nodes.
+                            #filter import to transform nodes
                             imported_transforms = cmds.ls(imported_nodes, long=True, type="transform") if imported_nodes else []
                             if not imported_transforms:
                                 print(f"  - skipped {field_name}: no imported transform nodes")
@@ -211,9 +274,9 @@ def main():
                             lod_long_name = (cmds.ls(lod_name, long=True) or [lod_name])[0]
                             print(f"    - {field_name}: {lod_long_name}")
                             
-                            # Special handling for LOD0.
+                            # special loging for lod0
                             if field_name == "lod0":
-                                # Add custom attrs to LOD0.
+                                # add custom attar
                                 pub_util.transfer_custom_attrs(base_name_new, lod_long_name)
                                 parent_nodes = cmds.listRelatives(base_name_new, parent=True, fullPath=True, type="transform") or []
                                 if parent_nodes:
@@ -223,8 +286,11 @@ def main():
                               
                             # add to publish list
                             lod_publish_list.append(lod_long_name)
+                            
+                            # for sub_key, sub_value in meta_data.items():
+                            #     print(f"    - {sub_key}: {sub_value}")
             
-            # Publish.
+            # publish Todo I think i need to set the default lod and run prep from selection
             if lod0_name and lod_publish_list:
                 # Build one material set from LOD0 texture folder and assign it to all LOD meshes.
                 if isinstance(lod0_texture_path, str) and lod0_texture_path:
@@ -250,7 +316,6 @@ def main():
                 else:
                     print("  - skipped shared shader assign: missing/invalid lod0 texture_path")
 
-                unlock_and_soften_normals(lod_publish_list)
                 cmds.select(lod_publish_list, replace=True)
                 publish_dir = pub_util.publish_asset(
                     game,

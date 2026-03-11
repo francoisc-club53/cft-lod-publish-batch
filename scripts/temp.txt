@@ -1,0 +1,28 @@
+﻿
+asset_map_path = r'E:\work\c53\test\cft-lod-balancer-batch\asset_lods_map.json'
+
+
+# make a new scene
+
+# import as a test the 1st item in the asset asset_map_path
+
+# import existing asset via pub_ui.show_my_maya_ui() cnds
+from cft_sandbox import import_utils
+game = "anvil"
+level = "rolling_mushroom"
+asset = "bone"
+variant = "bigbone"
+import_type = "usd"  # Options: "usd", "fbx", "hull"
+import_utils.do_general_import(game, level, asset, variant, import_type, versioned_dir=None)
+
+# import new LODs via json
+E:\work\c53\test\cft-lod-balancer-batch\asset_lods_map.json
+
+# name the LODS
+<assetneam>_<var>_LOD<num>
+
+# textrue
+from cft_sandbox import texture_utils
+texture_utils.construct_shaders_from_folder(r'E:\work\c53\projects\bigtama_assets\trunk\models\bone\bigbone\textures\png', True)
+
+# soft normals delet history
